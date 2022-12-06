@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.14",
+    "@types/pg": "^8.6.5",
+    "@types/reflect-metadata": "^0.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pg": "^8.8.0",
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typeorm": "^0.3.11",
+    "typescript": "^4.9.3"
+  },
+  "scripts": {
+    "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
+    "build": "tsc"
+  },
+  "name": "contact-book",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:MateusBona28/contact-book.git",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.11"
+  }
+}
