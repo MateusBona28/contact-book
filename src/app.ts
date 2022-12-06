@@ -5,6 +5,5 @@ const app = express();
 app.use(express.json());
 
 app.use('/accounts', accountsRoutes)
-const teste = 'teste'
 
 export default app;

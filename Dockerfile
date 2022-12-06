@@ -1,13 +1,11 @@
-FROM node:14-alpine
+FROM node:18
 
-WORKDIR /src
+WORKDIR /app
 
-ADD package.json /src 
+COPY "package.json" /app
 
-RUN npm i --silent
+RUN yarn
 
-ADD . /src 
+COPY . /app
 
-RUN npm run build 
-
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
