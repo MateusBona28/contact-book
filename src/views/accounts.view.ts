@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { testView } from "../controllers/accounts.controller";
+import { postController } from "../controllers/accounts.controller";
 
 const accountsRoutes = Router()
 
-accountsRoutes.get("", testView)
+accountsRoutes.post("", postController)
 
 export default accountsRoutes

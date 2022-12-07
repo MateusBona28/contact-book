@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AccountRequest } from "../interfaces/createAccount.interface";
+import { createAccount } from "../services/accounts.services";
 
+export const postController = async (request: AccountRequest, response: Response) => {
+    const newUser = await createAccount(request)
 
-export const testView = (request: Request, response: Response) => {
-    const teste = "testando"
-    return response.json("teste")
+    return response.status(201).json(newUser)
 }
