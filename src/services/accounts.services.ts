@@ -39,8 +39,6 @@ export const createAccount = async (request: AccountRequest) => {
 
         const newAccount = await accountsRepository.save(validatedAccountData)
 
-        const allNewPhoneNumbers: Phone[] = []
-
         for (let i = 0; i < phonesToRegister.length; i++){
 
             const phoneNumber = phonesToRegister[i]
@@ -52,7 +50,7 @@ export const createAccount = async (request: AccountRequest) => {
     
             phonesRepository.create(validatedPhoneData)
     
-            const newPhoneNumber = await phonesRepository.save(validatedPhoneData)
+            await phonesRepository.save(validatedPhoneData)
 
             if (i + 1 === phonesToRegister.length){
                 const accountResponse: IAccountResponse[] = await accountsRepository.find({ where: { id: newAccount.id } })
