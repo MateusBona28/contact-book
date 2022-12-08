@@ -4,7 +4,7 @@ import { Account } from "../entities/account.entity";
 import { Phone } from "../entities/phone.entity";
 import AppError from "../errors/AppError";
 import { IAccountResponse } from "../interfaces/AccountResponse.interface";
-import { AccountRequest } from "../interfaces/createAccount.interface";
+import { AccountRequest } from "../interfaces/AccountRequest.interface";
 import { IPhonesToRegister } from "../interfaces/PhonesToRegister.interface";
 import { verifyIfPhoneNumberAlreadyExists } from "./phones.services";
 
@@ -101,8 +101,7 @@ export const getAccountByEmail = async (email: string) => {
 
     if (account) {
         return {
-            ...account,
-            password: undefined
+            ...account
         }
     }
 
