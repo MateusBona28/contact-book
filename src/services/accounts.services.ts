@@ -7,6 +7,7 @@ import { IAccountResponse } from "../interfaces/AccountResponse.interface";
 import { AccountRequest } from "../interfaces/AccountRequest.interface";
 import { IPhonesToRegister } from "../interfaces/PhonesToRegister.interface";
 import { verifyIfPhoneNumberAlreadyExists } from "./phones.services";
+import { TokenAccountRequest } from "../interfaces/AuthRequest.interface";
 
 export const createAccount = async (request: AccountRequest) => {
     const { fullName, email,  phones, password } = request.body
@@ -92,6 +93,21 @@ export const createAccount = async (request: AccountRequest) => {
     delete accountResponse[0].password
 
     return accountResponse[0]
+}
+
+export const listAccountById = async (request: TokenAccountRequest, accountId: string) => {
+    if (request.body.tokenAccount.id !== accountId) {
+        throw new AppError("you dont have permission to perform this action", 403);
+    }
+
+    const accountsRepository = AppDataSource.getRepository(Account)
+
+    const account = await accountsRepository.findOneBy({ id: accountId })
+
+    return {
+        ...account,
+        password: undefined
+    }
 }
 
 export const getAccountByEmail = async (email: string) => {

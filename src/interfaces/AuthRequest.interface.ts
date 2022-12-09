@@ -6,3 +6,12 @@ export interface AuthRequest extends Request {
         password: string
     }
 }
+
+export interface TokenAccountRequest extends Request {
+    body: {
+        tokenAccount: {
+            id?: string
+            email?: string
+        }
+    }
+}
