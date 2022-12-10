@@ -3,6 +3,7 @@ import "dotenv/config"
 import { Account } from "./entities/account.entity"
 import { Phone } from "./entities/phone.entity"
 import { Contact } from "./entities/contact.entity"
+import { AccountContact } from "./entities/account_contacts.entity"
 
 const AppDataSource = new DataSource({
     type: "postgres",
@@ -13,7 +14,7 @@ const AppDataSource = new DataSource({
     database: process.env.DB,
     logging: false,
     synchronize: true,
-    entities: [Account, Phone, Contact]
+    entities: [Account, Phone, Contact, AccountContact]
     }
 )
 

@@ -8,6 +8,8 @@ import { AccountRequest } from "../interfaces/AccountRequest.interface";
 import { IPhonesToRegister } from "../interfaces/PhonesToRegister.interface";
 import { verifyIfPhoneNumberAlreadyExists } from "./phones.services";
 import { TokenAccountRequest } from "../interfaces/AuthRequest.interface";
+import { Contact } from "../entities/contact.entity";
+import { AccountContact } from "../entities/account_contacts.entity";
 
 export const createAccount = async (request: AccountRequest) => {
     const { fullName, email,  phones, password } = request.body
@@ -18,6 +20,8 @@ export const createAccount = async (request: AccountRequest) => {
 
     const accountsRepository = AppDataSource.getRepository(Account)
     const phonesRepository = AppDataSource.getRepository(Phone)
+    const contactsRepository = AppDataSource.getRepository(Contact)
+    const accountContactsRepository = AppDataSource.getRepository(AccountContact)
 
     const accountAlreadyExists = await getAccountByEmail(email)
 
@@ -85,10 +89,32 @@ export const createAccount = async (request: AccountRequest) => {
     }
 
     phonesRepository.create(validatedPhoneData)
-
     await phonesRepository.save(validatedPhoneData)
 
-    const accountResponse: IAccountResponse[] = await accountsRepository.find({ where: {id: newAccount.id} })
+    const newContact = {
+        fullName,
+        email,
+    }
+
+    contactsRepository.create(newContact)
+    const newSelfContact = await contactsRepository.save(newContact)
+
+    const newAccountContact = {
+        account: newAccount,
+        contact: newSelfContact,
+    }
+
+    accountContactsRepository.create(newAccountContact)
+    await accountContactsRepository.save(newAccountContact)
+
+    const accountResponse: IAccountResponse[] = await accountsRepository.find(
+        { 
+            where: { id: newAccount.id },
+            relations: { contacts: {
+                contact: true,
+            } },
+        }
+    )
 
     delete accountResponse[0].password
 
@@ -102,10 +128,17 @@ export const listAccountById = async (request: TokenAccountRequest, accountId: s
 
     const accountsRepository = AppDataSource.getRepository(Account)
 
-    const account = await accountsRepository.findOneBy({ id: accountId })
+    const account: IAccountResponse[] = await accountsRepository.find(
+        { 
+            where: { id: accountId },
+            relations: { contacts: {
+                account: true,
+            } },
+        }
+    )
 
     return {
-        ...account,
+        ...account[0],
         password: undefined
     }
 }

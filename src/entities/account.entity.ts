@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { AccountContact } from './account_contacts.entity';
 import { Contact } from './contact.entity';
 import { Phone } from './phone.entity';
 
@@ -17,12 +18,9 @@ export class Account {
     @Column({ type: 'varchar',  length: 90 })
     password: string | undefined
 
-    @CreateDateColumn({ type: 'date' })
-    createdAt: Date | undefined
-
-    @OneToMany(() => Contact, contact => contact.account, { eager: true })
-    Contacts: Contact[] | undefined
+    @OneToMany(() => AccountContact, accountContact => accountContact.account)
+    contacts: AccountContact[] | undefined
 
     @OneToMany(() => Phone, phone => phone.account, { eager: true })
-    Phones: Phone[] | undefined
+    phones: Phone[] | undefined
 }

@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Account } from './account.entity';
+import { AccountContact } from './account_contacts.entity';
 
 
 @Entity('contact')
@@ -13,7 +14,6 @@ export class Contact {
     @Column({ type: 'varchar', length: 50 })
     email: string | undefined
 
-    @ManyToOne(() => Account)
-    account: Account | undefined
-
+    @OneToMany(() => AccountContact, accountContact => accountContact.contact)
+    accounts: AccountContact[] | undefined
 }
