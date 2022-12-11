@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Account } from './account.entity';
+import { Contact } from './contact.entity';
 
 
 @Entity('phone')
@@ -13,7 +13,7 @@ export class Phone {
     @Column({ type:'varchar', length: 9 })
     number: string | undefined
 
-    @ManyToOne(() => Account)
-    account: Account | undefined
+    @ManyToOne(() => Contact)
+    contact: Contact | undefined
 
 }

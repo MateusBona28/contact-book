@@ -20,7 +20,4 @@ export class Account {
 
     @OneToMany(() => AccountContact, accountContact => accountContact.account)
     contacts: AccountContact[] | undefined
-
-    @OneToMany(() => Phone, phone => phone.account, { eager: true })
-    phones: Phone[] | undefined
 }

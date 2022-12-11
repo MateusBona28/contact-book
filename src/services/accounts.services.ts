@@ -37,12 +37,19 @@ export const createAccount = async (request: AccountRequest) => {
         password: hashedPassword
     }
 
+    const newContact = {
+        fullName,
+        email,
+    }
+
     if (phones.length > 1) {
         const phonesToRegister:IPhonesToRegister[] = await verifyIfPhoneNumberAlreadyExists(phones)
 
         accountsRepository.create(validatedAccountData)
-
         const newAccount = await accountsRepository.save(validatedAccountData)
+
+        contactsRepository.create(newContact)
+        const newSelfContact = await contactsRepository.save(newContact)
 
         for (let i = 0; i < phonesToRegister.length; i++){
 
@@ -50,11 +57,10 @@ export const createAccount = async (request: AccountRequest) => {
 
             const validatedPhoneData = {
                 ...phoneNumber,
-                account: newAccount
+                contact: newSelfContact,
             }
     
             phonesRepository.create(validatedPhoneData)
-    
             await phonesRepository.save(validatedPhoneData)
 
             if (i + 1 === phonesToRegister.length){
@@ -79,25 +85,19 @@ export const createAccount = async (request: AccountRequest) => {
     }
 
     accountsRepository.create(validatedAccountData)
-
     const newAccount = await accountsRepository.save(validatedAccountData)
+
+    contactsRepository.create(newContact)
+    const newSelfContact = await contactsRepository.save(newContact)
 
     const validatedPhoneData = {
         ddd,
         number,
-        account: newAccount
+        contact: newSelfContact,
     }
 
     phonesRepository.create(validatedPhoneData)
     await phonesRepository.save(validatedPhoneData)
-
-    const newContact = {
-        fullName,
-        email,
-    }
-
-    contactsRepository.create(newContact)
-    const newSelfContact = await contactsRepository.save(newContact)
 
     const newAccountContact = {
         account: newAccount,
@@ -110,9 +110,7 @@ export const createAccount = async (request: AccountRequest) => {
     const accountResponse: IAccountResponse[] = await accountsRepository.find(
         { 
             where: { id: newAccount.id },
-            relations: { contacts: {
-                contact: true,
-            } },
+            relations: { contacts: { contact: true } },
         }
     )
 
@@ -127,13 +125,12 @@ export const listAccountById = async (request: TokenAccountRequest, accountId: s
     }
 
     const accountsRepository = AppDataSource.getRepository(Account)
+    const accountContactsRepository = AppDataSource.getRepository(AccountContact)
 
     const account: IAccountResponse[] = await accountsRepository.find(
         { 
             where: { id: accountId },
-            relations: { contacts: {
-                account: true,
-            } },
+            relations: { contacts: { contact: true } }
         }
     )
 
