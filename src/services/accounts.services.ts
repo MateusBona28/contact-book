@@ -64,7 +64,7 @@ export const createAccount = async (request: AccountRequest) => {
             await phonesRepository.save(validatedPhoneData)
 
             if (i + 1 === phonesToRegister.length){
-                const accountResponse: IAccountResponse[] = await accountsRepository.find({ where: { id: newAccount.id } })
+                const accountResponse: Account[] = await accountsRepository.find({ where: { id: newAccount.id } })
                 delete accountResponse[0].password
     
                 return accountResponse[0]
@@ -107,7 +107,7 @@ export const createAccount = async (request: AccountRequest) => {
     accountContactsRepository.create(newAccountContact)
     await accountContactsRepository.save(newAccountContact)
 
-    const accountResponse: IAccountResponse[] = await accountsRepository.find(
+    const accountResponse: Account[] = await accountsRepository.find(
         { 
             where: { id: newAccount.id },
             relations: { contacts: { contact: true } },
@@ -125,9 +125,8 @@ export const listAccountById = async (request: TokenAccountRequest, accountId: s
     }
 
     const accountsRepository = AppDataSource.getRepository(Account)
-    const accountContactsRepository = AppDataSource.getRepository(AccountContact)
 
-    const account: IAccountResponse[] = await accountsRepository.find(
+    const account: Account[] = await accountsRepository.find(
         { 
             where: { id: accountId },
             relations: { contacts: { contact: true } }

@@ -9,6 +9,7 @@ export interface AuthRequest extends Request {
 
 export interface TokenAccountRequest extends Request {
     body: {
+        email: string
         tokenAccount: {
             id?: string
             email?: string

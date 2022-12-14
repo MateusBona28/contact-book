@@ -3,8 +3,10 @@ import { Account } from "../entities/account.entity"
 import { AccountContact } from "../entities/account_contacts.entity"
 import { Contact } from "../entities/contact.entity"
 import AppError from "../errors/AppError"
+import { IAccountResponse } from "../interfaces/AccountResponse.interface"
+import { TokenAccountRequest } from "../interfaces/AuthRequest.interface"
 
-export const addNewContact = async (request: any) => {
+export const addNewContact = async (request: TokenAccountRequest) => {
     const email = request.body.email
 
     const accountsRepository = AppDataSource.getRepository(Account)
@@ -32,4 +34,19 @@ export const addNewContact = async (request: any) => {
         password: undefined,
         id: undefined,
     }
+}
+
+export const listAllSelfContacts = async (req: TokenAccountRequest) => {
+    const accountId = req.body.tokenAccount.id
+
+    const accountsRepository = AppDataSource.getRepository(Account)
+
+    const account: Account[] = await accountsRepository.find(
+        { 
+            where: { id: accountId },
+            relations: { contacts: { contact: true } }
+        }
+    )
+
+    return { contacts: account[0].contacts }
 }

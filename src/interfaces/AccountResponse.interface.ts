@@ -8,5 +8,5 @@ export interface IAccountResponse {
     password?: string | undefined
     createdAt?: Date | undefined
     Phones?: Phone[] | undefined
-    Contacts?: Contact[] | undefined
+    contacts?: Contact[] | undefined
 }
