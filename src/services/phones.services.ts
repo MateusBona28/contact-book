@@ -2,7 +2,7 @@ import AppDataSource from "../data-source"
 import { Contact } from "../entities/contact.entity"
 import { Phone } from "../entities/phone.entity"
 import AppError from "../errors/AppError"
-import { IAccountResponse } from "../interfaces/AccountResponse.interface"
+import { TokenAccountRequest } from "../interfaces/AuthRequest.interface"
 import { IPhonesToRegister } from "../interfaces/PhonesToRegister.interface"
 
 export const createPhone = async (body: any) => {
@@ -68,4 +68,24 @@ export const verifyIfPhoneNumberAlreadyExists = async (phones: string[]) => {
     }
 
     return phonesToRegister
+}
+
+export const deletePhoneNumber = async (request: TokenAccountRequest, phoneId: string) => {
+    const accountEmail = request.body.tokenAccount.email
+
+    const contactsRepository = AppDataSource.getRepository(Contact)
+    const phonesRepository = AppDataSource.getRepository(Phone)
+
+    const contact: any = await contactsRepository.findOne({ where: { email: accountEmail } })
+
+    for (let i = 0; i < contact.phones.length; i++){
+        const phoneNumber = contact.phones[i]
+
+        if (phoneNumber.id === phoneId) {
+            await phonesRepository.delete(phoneId)
+            return ""
+        }
+    }
+
+    throw new AppError("phone number not found");
 }
