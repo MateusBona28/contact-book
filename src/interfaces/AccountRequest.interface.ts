@@ -8,3 +8,12 @@ export interface AccountRequest extends Request {
         password: string
     }
 }
+
+export interface AccountUpdateRequest extends Request {
+    body: {
+        fullName?: string
+        email?: string
+        phones?: string[]
+        password?: string
+    }
+}

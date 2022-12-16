@@ -4,7 +4,7 @@ import { Account } from "../entities/account.entity";
 import { Phone } from "../entities/phone.entity";
 import AppError from "../errors/AppError";
 import { IAccountResponse } from "../interfaces/AccountResponse.interface";
-import { AccountRequest } from "../interfaces/AccountRequest.interface";
+import { AccountRequest, AccountUpdateRequest } from "../interfaces/AccountRequest.interface";
 import { IPhonesToRegister } from "../interfaces/PhonesToRegister.interface";
 import { verifyIfPhoneNumberAlreadyExists } from "./phones.services";
 import { TokenAccountRequest } from "../interfaces/AuthRequest.interface";
@@ -151,4 +151,8 @@ export const getAccountByEmail = async (email: string) => {
     }
 
     return false
+}
+
+export const updateAccount = async (request: AccountUpdateRequest, accountId: string) => {
+    const { email, fullName, phones } = request.body
 }
