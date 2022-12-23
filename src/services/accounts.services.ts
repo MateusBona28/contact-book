@@ -186,3 +186,16 @@ export const updateAccount = async (request: AccountUpdateRequest, accountId: st
         password: undefined,
     }
 }
+
+export const listAllAccounts = async () => {
+    const accountsRepository = AppDataSource.getRepository(Account)
+
+    const accounts = await accountsRepository.find()
+
+    return accounts.map((account) => {
+        return {
+            ...account,
+            password: undefined
+        }
+    })
+}
