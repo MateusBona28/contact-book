@@ -1,8 +1,8 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { AccountRequest } from "../interfaces/AccountRequest.interface";
 import { createAccount, listAccountById, listAllAccounts, updateAccount } from "../services/accounts.services";
 
-export const postController = async (request: AccountRequest, response: Response) => {
+export const postAccountController = async (request: AccountRequest, response: Response) => {
     const newUser = await createAccount(request)
 
     return response.status(201).json(newUser)

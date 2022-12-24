@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { postAuth } from "../controllers/auth.controller";
+import { postAuthController } from "../controllers/auth.controller";
 
 const authRoutes = Router();
 
-authRoutes.post('', postAuth);
+authRoutes.post('', postAuthController);
 
 export default authRoutes;
