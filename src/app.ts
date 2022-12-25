@@ -5,9 +5,11 @@ import { handleErrorMiddleware } from './middlewares/handleError.middleware';
 import authRoutes from './views/auth.view';
 import contactsRoutes from './views/contacts.views';
 import phonesRoutes from './views/phones.view';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors())
 
 app.use('/accounts', accountsRoutes);
 app.use('/login', authRoutes);
