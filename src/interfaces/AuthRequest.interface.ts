@@ -16,3 +16,14 @@ export interface TokenAccountRequest extends Request {
         }
     }
 }
+
+export interface TokenAccountPhoneUpdateRequest extends Request {
+    body: {
+        ddd: string
+        number: string
+        tokenAccount: {
+            id?: string
+            email?: string
+        }
+    }
+}

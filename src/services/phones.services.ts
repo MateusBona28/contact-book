@@ -2,7 +2,7 @@ import AppDataSource from "../data-source"
 import { Contact } from "../entities/contact.entity"
 import { Phone } from "../entities/phone.entity"
 import AppError from "../errors/AppError"
-import { TokenAccountRequest } from "../interfaces/AuthRequest.interface"
+import { TokenAccountPhoneUpdateRequest, TokenAccountRequest } from "../interfaces/AuthRequest.interface"
 import { IPhonesToRegister } from "../interfaces/PhonesToRegister.interface"
 
 export const createPhone = async (body: any) => {
@@ -88,4 +88,47 @@ export const deletePhoneNumber = async (request: TokenAccountRequest, phoneId: s
     }
 
     throw new AppError("phone number not found");
+}
+
+export const updatePhone = async (request: TokenAccountPhoneUpdateRequest, phoneId: string) => {
+    const accountEmail = request.body.tokenAccount.email
+
+    const contactsRepository = AppDataSource.getRepository(Contact)
+    const phonesRepository = AppDataSource.getRepository(Phone)
+
+    const contact: any = await contactsRepository.findOne({ where: { email: accountEmail } })
+
+    for (let i = 0; i < contact.phones.length; i++){
+        const phoneNumber = contact.phones[i]
+
+        if (phoneNumber.id === phoneId) {
+            const { ddd, number } = request.body
+
+            const updateInfo = {
+                ddd,
+                number
+            }
+
+            const phoneAlreadyExists = await phonesRepository.findOne({ where: {
+                ddd,
+                number
+            } })
+
+            if (phoneAlreadyExists) {
+                throw new AppError('invalid phone number', 400);
+            }
+
+            const updatedPhone = {
+                ...phoneNumber,
+                ...updateInfo,
+            }
+
+            await phonesRepository.update(phoneId, updatedPhone)
+
+            return "phone number updated with success!"
+        }
+    }
+
+    throw new AppError("phone number not found");
+
 }
