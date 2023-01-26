@@ -154,7 +154,7 @@ export const getAccountByEmail = async (email: string) => {
 }
 
 export const updateAccount = async (request: AccountUpdateRequest, accountId: string) => {
-    const { email, fullName, password } = request.body
+    const { email, fullName } = request.body
 
     const accountsRepository = AppDataSource.getRepository(Account)
     const accountToUpdate = await accountsRepository.findOneBy({ id: accountId })
@@ -163,20 +163,21 @@ export const updateAccount = async (request: AccountUpdateRequest, accountId: st
         throw new AppError('account not found', 404);
     }
 
-    let updateInfo = {
+    const contactsRepository = AppDataSource.getRepository(Contact)
+    const selfContact = await contactsRepository.findOneBy({ email: accountToUpdate?.email })
+    const contactId: string = selfContact?.id || ""
+
+    const updateAccountInfo = {
         email,
         fullName,
-        password,
-    }
-
-    if (password) {
-        const hashedPassword = await hash(password, 10)
-        updateInfo.password = hashedPassword
     }
 
     await accountsRepository.update(accountId, {
-        ...accountToUpdate,
-        ...updateInfo,
+        ...updateAccountInfo,
+    })
+
+    await contactsRepository.update(contactId, {
+        ...updateAccountInfo
     })
 
     const updatedAccount = await accountsRepository.findOneBy({ id: accountId })
